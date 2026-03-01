@@ -1486,11 +1486,6 @@ a:hover, a:active {
     stroke-dasharray: 10;
   }
 }
-.site-header.dsn-hamburger .dsn-back {
-  /**
-      Hover
-   */
-}
 .site-header.dsn-hamburger .dsn-back svg {
   fill: none;
   stroke: var(--border-color);
@@ -2424,11 +2419,6 @@ a:hover, a:active {
 /* -------------------------------------------------------
                    09 - Slider
 -------------------------------------------------------- */
-.main-slider {
-  /**
-    Animation
-   */
-}
 .main-slider {
   height: 100vh;
 }
@@ -3367,7 +3357,6 @@ a:hover, a:active {
 .news-content .post-tags a {
   color: var(--heading-color);
   margin-right: 30px;
-  display: inline-block;
   line-height: 1;
   float: left;
 }
@@ -4338,7 +4327,6 @@ ul.intro-project-list li h5.title-list-project + p.description-list-project {
 }
 .dsn-compare-container .img-comp-img img {
   display: block;
-  vertical-align: middle;
 }
 .dsn-compare-container .dsn-handle-slider {
   top: 0;
@@ -5734,11 +5722,6 @@ ul.intro-project-list li h5.title-list-project + p.description-list-project {
   margin-bottom: 0;
 }
 
-.woocommerce {
-  /**
-      Tabs
-   */
-}
 .woocommerce .dsn-blackdsn.dsn-single-product {
   padding-top: 180px;
   padding-bottom: 100px;
@@ -5884,6 +5867,7 @@ ul.intro-project-list li h5.title-list-project + p.description-list-project {
   width: 80px;
   height: 42px;
   -moz-appearance: textfield;
+  appearance: textfield;
   line-height: 1.65;
   float: left;
   display: block;
