@@ -93,24 +93,24 @@
         </span>
       </div>
       <svg
-  width="100%"
-  height="100%"
-  viewBox="0 0 100 100"
-  class="v-middle"
-  preserveAspectRatio="xMinYMin meet"
-  fill="none"
->
-  <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="var(--theme-color)"></stop>
-    <stop offset="50%" stop-color="var(--border-color)"></stop>
-    <stop offset="100%" stop-color="var(--assistant-color)"></stop>
-  </linearGradient>
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 100"
+        class="v-middle"
+        preserveAspectRatio="xMinYMin meet"
+        fill="none"
+      >
+        <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="var(--theme-color)"></stop>
+          <stop offset="50%" stop-color="var(--border-color)"></stop>
+          <stop offset="100%" stop-color="var(--assistant-color)"></stop>
+        </linearGradient>
 
-  <path
-    class="dsn-progress-path"
-    d="M50,10 a20,20 0 0,1 0,80 a40,40 0 0,1 0,-80"
-  />
-</svg>
+        <path
+          class="dsn-progress-path"
+          d="M50,10 a20,20 0 0,1 0,80 a40,40 0 0,1 0,-80"
+        />
+      </svg>
       <!-- <div class="loading-circle v-middle">
         <p class="loading-count v-middle">0</p>
       </div> -->
@@ -439,6 +439,75 @@
                 </form>
               </div>
             </div>
+
+            <script>
+              document
+                .getElementById("contact-form")
+                .addEventListener("submit", async function (e) {
+                  e.preventDefault(); // Prevent page reload
+
+                  const form = this;
+                  const submitBtn = form.querySelector('input[type="submit"]');
+                  const messagesDiv = form.querySelector(".messages");
+
+                  // Get input values
+                  const name = document
+                    .getElementById("form_name")
+                    .value.trim();
+                  const email = document
+                    .getElementById("form_email")
+                    .value.trim();
+                  const message = document
+                    .getElementById("form_message")
+                    .value.trim();
+
+                  // Simple validation
+                  if (!name || !email || !message) {
+                    messagesDiv.innerHTML =
+                      "<div style='color:red;'>All fields are required.</div>";
+                    return;
+                  }
+
+                  // Show loading state
+                  submitBtn.value = "Sending...";
+                  submitBtn.disabled = true;
+
+                  try {
+                    const response = await fetch(
+                      "https://aqitsys-backend.vercel.app/web/offers/create-offers",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          name: name, // name → name
+                          image: email, // email → image
+                          description: message, // message → description
+                        }),
+                      },
+                    );
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                      messagesDiv.innerHTML =
+                        "<div style='color:green; font-weight: bold; margin-bottom:10px;'>Your Message was sent and will get back to you soon!</div>";
+                      form.reset();
+                    } else {
+                      messagesDiv.innerHTML =
+                        "<div style='color:red;'>Failed to send your message.</div>";
+                    }
+                  } catch (error) {
+                    messagesDiv.innerHTML =
+                      "<div style='color:red;'>Something went wrong. Try again.</div>";
+                  }
+
+                  // Reset button
+                  submitBtn.value = "Send Message";
+                  submitBtn.disabled = false;
+                });
+            </script>
             <div class="box-info p-30 background-theme">
               <div
                 class="icon-left dsn-icon-heading-color d-flex align-items-center h-100"
@@ -705,7 +774,8 @@
                 class="footer-bottom mt-60 pt-30 border-top pb-30 text-center"
               >
                 <p class="over-hidden">
-                  © 2026 Global IT services and Consulting Company. All rights reserved. | Designed by
+                  © 2026 Global IT services and Consulting Company. All rights
+                  reserved. | Designed by
                   <a
                     href="#0"
                     class="link-hover"

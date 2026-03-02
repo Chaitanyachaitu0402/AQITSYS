@@ -420,6 +420,13 @@
         </button>
       </div>
 
+      <div id="loadingScreen" class="loading-screen">
+  <div class="loader"></div>
+  <p>Loading Jobs...</p>
+</div>
+
+<div id="jobList"></div>
+
 <div class="job-list" id="jobList"></div>
 
       <!-- Job Listings -->
@@ -471,10 +478,10 @@
         </p>
 
         <div class="mt-30">
-          <a href="contact.html"
-             class="dsn-btn dsn-border border-color-default background-section">
-            Submit Your Resume
-          </a>
+          <a href="mailto:info@aqitsys.com?subject=Application%20for%20Job%20Position"
+   class="dsn-btn dsn-border border-color-default background-section">
+   Submit Your Resume
+</a>
         </div>
       </div>
 
@@ -513,7 +520,7 @@
                         <p class="max-w750 testimonial-content p-large">
                           Partnering with this team truly empowered our business through innovative software solutions. 
                           They rebuilt our legacy platform into a modern, scalable system that improved performance 
-                          and reduced operational costs. Their technical depth and clear communication made the 
+                          and reduced operational costs. Their technical depth made the 
                           entire development process smooth and transparent.
                         </p>
                       </div>
@@ -1020,24 +1027,42 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+  fetchJobs();
+});
+
 async function fetchJobs() {
+  const loader = document.getElementById("loadingScreen");
+  const jobList = document.getElementById("jobList");
+
+  // Show loader
+  loader.style.display = "flex";
+  jobList.innerHTML = "";
+
   try {
     const response = await fetch("https://aqitsys-backend.vercel.app/web/card/get-all-card");
     const result = await response.json();
 
-    allJobs = result.data || result;
-    renderJobs(allJobs);
+    const jobs = result.data || result;
+
+    renderJobs(jobs);
 
   } catch (error) {
-    console.error("Error fetching jobs:", error);
+    loader.style.display = "none";
+    jobList.innerHTML = "<p>Error loading jobs.</p>";
   }
 }
 
 function renderJobs(jobs) {
+  const loader = document.getElementById("loadingScreen");
   const jobList = document.getElementById("jobList");
+
+  // Hide loader after data received
+  loader.style.display = "none";
+
   jobList.innerHTML = "";
 
-  if (jobs.length === 0) {
+  if (!jobs || jobs.length === 0) {
     jobList.innerHTML = "<p>No jobs found.</p>";
     return;
   }
@@ -1047,41 +1072,47 @@ function renderJobs(jobs) {
     jobCard.classList.add("job-card");
 
     jobCard.innerHTML = `
-  <div class="job-info">
-    <h5>${job.name}</h5>
+      <div class="job-info">
+        <h5>${job.name}</h5>
 
-    <div class="job-meta">
-      <span>Job Id : ${job.jobnumber}</span>
-      <span>Posted on : ${new Date(job.createdAt).toLocaleDateString()}</span>
-      <span>Location : ${job.location}</span>
-    </div>
+        <div class="job-meta">
+          <span>Job Id : ${job.jobnumber}</span>
+          <span>Posted on : ${new Date(job.createdAt).toLocaleDateString()}</span>
+          <span>Location : ${job.location}</span>
+        </div>
 
-    <div class="job-description" id="desc-${index}" style="display:none; margin-top:10px;">
-      <strong>Job Description :</strong>
-      <p>${job.description}</p>
-    </div>
-  </div>
+        <div class="job-description" id="desc-${index}" style="display:none; margin-top:10px;">
+          <strong>Job Description :</strong>
+          <p>${job.description}</p>
+        </div>
+      </div>
 
-  <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
-    
-    <a href="#"
-       class="dsn-btn dsn-border border-color-default background-section"
-       onclick="toggleDescription(event, ${index})">
-      Job Details
-    </a>
+      <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
+        
+        <a href="#"
+           class="dsn-btn dsn-border border-color-default background-section"
+           onclick="toggleDescription(event, ${index})">
+          Job Details
+        </a>
 
-    <a href="mailto:info@aqitsys.com?subject=${encodeURIComponent(
-      `Application for Job ID ${job.jobnumber} - ${job.name}`
-    )}"
-       class="dsn-btn background-main border-color-default">
-      Apply Now
-    </a>
+        <a href="mailto:info@aqitsys.com?subject=${encodeURIComponent(
+          `Application for Job ID ${job.jobnumber} - ${job.name}`
+        )}"
+           class="dsn-btn background-main border-color-default">
+          Apply Now
+        </a>
 
-  </div>
-`;
+      </div>
+    `;
 
     jobList.appendChild(jobCard);
   });
+}
+
+function toggleDescription(event, index) {
+  event.preventDefault();
+  const desc = document.getElementById(`desc-${index}`);
+  desc.style.display = desc.style.display === "none" ? "block" : "none";
 }
 
 function toggleDescription(event, index) {
